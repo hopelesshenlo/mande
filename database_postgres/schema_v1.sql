@@ -17,17 +17,17 @@ CREATE DATABASE mande_db
 
 CREATE TABLE medio_pago (
 	id SERIAL PRIMARY KEY,
-	numero_cuenta INT,
-	tipo VARCHAR(35),
-	fecha_expiracion DATE,
-    cvc INT check (cvc <= 3),
+	numero_cuenta INT NOT NULL,
+	tipo VARCHAR(35) NOT NULL,
+	fecha_expiracion DATE NOT NULL,
+    cvc INT check (cvc <= 3) NOT NULL,
     creado timestamp,
     actualizado timestamp
 );
 
 CREATE TABLE disponibilidad (
     id SERIAL PRIMARY KEY,
-    estado boolean default 0,
+    estado boolean default FALSE,
     creado timestamp,
     actualizado timestamp
 );
@@ -35,16 +35,17 @@ CREATE TABLE disponibilidad (
 CREATE TABLE cliente (
     id SERIAL PRIMARY KEY,
     medio_pago_id INT,
-    nombre VARCHAR(45),
-    apellido VARCHAR(45),
+    nombre VARCHAR(45) NOT NULL,
+    apellido VARCHAR(45) NOT NULL,
     tipo_documento VARCHAR(45),
-    numero_documento INT,
+    numero_documento INT NOT NULL,
     fecha_nacimiento DATE,
-    email VARCHAR(50),
+    email VARCHAR(50) NOT NULL,
     direccion VARCHAR(50),
-    foto_perfil VARCHAR(100),
-    num_celular INT,
-    imagen_recibo VARCHAR(100),
+    foto_perfil VARCHAR(100) NOT NULL,
+    num_celular INT NOT NULL,
+    imagen_recibo VARCHAR(100) NOT NULL,
+    contrasena VARCHAR(60) CHECK (length(contrasena) > 6) NOT NULL,
     CONSTRAINT fk_medio_pago
     FOREIGN KEY (medio_pago_id) 
         REFERENCES medio_pago(id),
@@ -56,16 +57,17 @@ CREATE TABLE trabajador (
     id SERIAL PRIMARY KEY,
     medio_pago_id INT,
     disponibilidad_id INT,
-    nombre VARCHAR(45),
-    apellido VARCHAR(45),
+    nombre VARCHAR(45) NOT NULL,
+    apellido VARCHAR(45) NOT NULL,
     tipo_documento VARCHAR(45),
-    numero_documento INT,
+    numero_documento INT NOT NULL,
     fecha_nacimiento DATE,
-    email VARCHAR(50),
-    direccion VARCHAR(50),
-    foto_perfil VARCHAR(100),
-    num_celular INT,
-    imagen_documento VARCHAR(100),
+    email VARCHAR(50) NOT NULL,
+    direccion VARCHAR(50) NOT NULL,
+    foto_perfil VARCHAR(100) NOT NULL,
+    num_celular INT NOT NULL,
+    imagen_documento VARCHAR(100) NOT NULL,
+    contrasena VARCHAR(60)  CHECK (length(contrasena) > 6) NOT NULL,
     CONSTRAINT fk_medio_pago
     FOREIGN KEY (medio_pago_id) 
         REFERENCES medio_pago(id),
@@ -75,7 +77,7 @@ CREATE TABLE trabajador (
 
 CREATE TABLE labor (
 	id SERIAL PRIMARY KEY,
-    nombre VARCHAR(45),
+    nombre VARCHAR(45) NOT NULL,
     descripcion VARCHAR(150),
     creado timestamp,
     actualizado timestamp
@@ -99,7 +101,7 @@ CREATE TABLE pago (
     id SERIAL PRIMARY KEY,
     cliente_id INT,
     fecha DATE,
-    monto INT,
+    monto INT NOT NULL,
     CONSTRAINT fk_cliente
     FOREIGN KEY (cliente_id) 
         REFERENCES cliente(id),
@@ -128,7 +130,7 @@ CREATE TABLE servicio (
 
 CREATE TABLE calificacion (
     id SERIAL PRIMARY KEY,
-    valor INT,
+    valor INT NOT NULL,
     servicio_id INT,
     trabajador_id INT,
     cliente_id INT,
